@@ -1,16 +1,12 @@
-# Bug Report
-
-<!-- Issue Template from ColleagueApp/colleague -->
-
 ---
-
 name: Bug report
 about: Create a report to help us improve
 title: "[Bug] Title"
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
+
+<!-- Issue Template from ColleagueApp/colleague -->
 
 ## Description
 

@@ -1,16 +1,12 @@
-# Feature Request
-
-<!-- Issue Template from ColleagueApp/colleague -->
-
 ---
-
 name: Feature request
 about: Suggest an idea for this project
 title: "[Enhancement] Title"
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
+
+<!-- Issue Template from ColleagueApp/colleague -->
 
 ## Overview
 
