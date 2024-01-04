@@ -56,6 +56,7 @@ jobs:
     needs: [test, build]
 
     steps:
+      - uses: actions/checkout@v3
       - name: Docker Build & Push Action
         uses: mr-smithers-excellent/docker-build-push@v6.2
         with:
