@@ -6,7 +6,7 @@ import abc
 import numpy as np
 
 
-class MediaInterface(metaclass=abc.ABCMeta):
+class Media(metaclass=abc.ABCMeta):
     """
     Represents a media object.
     """
@@ -18,12 +18,13 @@ class MediaInterface(metaclass=abc.ABCMeta):
                 callable(subclass.extract_text) or
                 NotImplemented)
 
-    @abc.abstractmethod
-    def __init__(self) -> None:
+    def __init__(self, url: str, filename: str):
         """
         Initializes the Media object.
         """
-        raise NotImplementedError
+        self.url = url
+        self.filename = filename
+        self.resolution = None
 
     @abc.abstractmethod
     def __str__(self) -> str:
