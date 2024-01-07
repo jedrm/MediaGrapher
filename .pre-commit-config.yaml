@@ -22,5 +22,5 @@ repos:
         args: [
             "-rn", # Only display messages
             "-sn", # Don't display the score
-            "--extension-pkg-whitelist=cv2",
+            "--rcfile=.pylintrc",
           ]
