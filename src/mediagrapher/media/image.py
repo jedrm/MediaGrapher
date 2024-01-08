@@ -2,8 +2,12 @@
 Image Class
 """
 
+import os
+from io import BytesIO
+
 import numpy as np
 import cv2
+import requests
 from PIL import Image
 from .media import Media
 
@@ -13,13 +17,40 @@ class ImageMedia(Media):
     Represents an image object.
     """
 
-    def __init__(self, url, filename):
+    def __init__(self, url=None, filename=None):
         """
         Initializes the Image object.
         """
+        if not (url or filename):
+            raise ValueError("Either url or filename must be provided")
+
+        # Check if the file exists, if not, download from internet
         super().__init__(url, filename)
-        self.image = Image.open(f"frames/{filename}")
-        self.resolution = self.image.size
+        if url:
+            try:
+                response = requests.get(url, allow_redirects=True, timeout=10)
+            except requests.exceptions.ConnectionError as e:
+                raise ValueError(
+                    f"URL {url} does not exist or is not accessible") from e
+
+            if not response.ok:
+                raise ValueError(
+                    f"URL {url} does not exist or is not accessible")
+
+            content_type = response.headers.get('content-type')
+            if 'image' not in content_type:
+                raise ValueError(
+                    f"URL {url} is not a valid image file")
+
+            self.image = Image.open(BytesIO(response.content))
+            self.resolution = self.image.size
+
+        else:
+            if not os.path.isfile(filename):
+                raise FileNotFoundError(
+                    f"File {filename} does not exist in the current directory")
+            self.image = Image.open(filename)
+            self.resolution = self.image.size
 
     def __str__(self) -> str:
         """
@@ -63,8 +94,9 @@ class ImageMedia(Media):
         delta = 0
         ddepth = cv2.CV_16S
 
-        src = cv2.imread(self.filename, cv2.IMREAD_COLOR)
-        src = cv2.GaussianBlur(src, (3, 3), 0)
+        # src = cv2.cvtColor(self.to_numpy_array(), cv2.COLOR_BGR2GRAY)
+        # src = cv2.imread(self.filename, cv2.IMREAD_COLOR)
+        src = cv2.GaussianBlur(self.to_numpy_array(), (3, 3), 0)
         gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 
         grad_x = cv2.Sobel(gray, ddepth, 1, 0, ksize=3, scale=scale,
@@ -87,6 +119,7 @@ class ImageMedia(Media):
             height (int): The new height of the image object.
         """
         self.image = self.image.resize((width, height))
+        self.resolution = self.image.size
 
     def resize_scale(self, scale: float) -> None:
         """
@@ -97,6 +130,7 @@ class ImageMedia(Media):
         """
         self.image = self.image.resize(
             (int(self.resolution[0] * scale), int(self.resolution[1] * scale)))
+        self.resolution = self.image.size
 
     def rotate(self, angle: float) -> None:
         """
@@ -106,6 +140,7 @@ class ImageMedia(Media):
             angle (float): The angle in degrees to rotate the image object.
         """
         self.image = self.image.rotate(angle)
+        self.resolution = self.image.size
 
     def change_format(self, new_format: str) -> None:
         """
