@@ -98,7 +98,7 @@ class ImageMedia(Media):
         """
         return np.array(self.image)
 
-    def get_canny(self, low_threshold, high_threshold) -> np.ndarray:
+    def get_canny(self, low_threshold: int = 50, high_threshold: int = 150) -> np.ndarray:
         """
         Apply Canny edge detection to the image.
 
