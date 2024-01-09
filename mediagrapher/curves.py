@@ -10,13 +10,22 @@ from .media.media import Media
 
 class Curves:
     """
-    A class representing curves in a media.
+    Represents a collection of curves extracted from a media object.
+
+    The Curves class provides methods to retrieve segments and coordinates of the curves in the path.
+    It also includes functions to calculate linear and cubic Bezier curves.
+
+    Attributes:
+        media (Media): The media object.
+        bitmap (potrace.Bitmap): The bitmap representation of the media.
+        path (potrace.Path): The traced path of the curves.
 
     Methods:
-    - get_segments: Returns the segments of the curves.
-    - get_bezier_curves: Returns the Bezier curves of the curves.
-    - get_latex: Returns the LaTeX representation of the curves.
-    - export_latex: Exports the curves to a LaTeX file.
+        __init__(self, media: Media, algorithm: str = "Canny"): Initializes the Curves object.
+        get_segments(self) -> List[List[Tuple[float, float]]]: Returns a list of segments in the path.
+        get_coordinates(self, linspace: int = 100) -> List[List[List[float]]]: Returns the coordinates of the curves in the path.
+        linear_bezier_curve(self, start_point: int, end_point: int, t: float) -> float: Calculates the linear Bezier curve.
+        cubic_bezier_curve(self, start_point: int, end_point: int, c1: int, c2: int, t: float) -> float: Calculates the cubic Bezier curve.
     """
 
     def __init__(self, media: Media, algorithm: str = "Canny"):
@@ -25,6 +34,11 @@ class Curves:
 
         Args:
             media (Media): The media object.
+            algorithm (str): The algorithm to use for curve extraction. Default is "Canny".
+                Valid options are "Canny" and "Sobel".
+
+        Raises:
+            ValueError: If an invalid algorithm is provided.
         """
         match algorithm:
             case "Canny":
@@ -75,9 +89,6 @@ class Curves:
         Returns:
             List[List[List[float], List[float]]]: A list of coordinates for each curve segment in the path.
                 Each coordinate is represented as a list of x and y values.
-
-        Raises:
-            None.
         """
         coordinates = []
 
