@@ -8,8 +8,14 @@ import numpy as np
 
 class Media(metaclass=abc.ABCMeta):
     """
-    Represents a media object.
+    Abstract base class for representing media objects.
+
+    Attributes:
+        - url (str): The URL of the media.
+        - filename (str): The filename of the media.
+        - resolution: The resolution of the media (None by default).
     """
+
     @classmethod
     def __subclasshook__(cls, subclass):
         return (hasattr(subclass, 'load_data_source') and
@@ -20,7 +26,11 @@ class Media(metaclass=abc.ABCMeta):
 
     def __init__(self, url: str, filename: str):
         """
-        Initializes the Media object.
+        Initialize a Media object.
+
+        Args:
+            url (str): The URL of the media.
+            filename (str): The filename of the media.
         """
         self.url = url
         self.filename = filename
