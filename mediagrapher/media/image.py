@@ -14,12 +14,40 @@ from .media import Media
 
 class ImageMedia(Media):
     """
-    Represents an image object.
+    Represents an image media object.
+
+    Attributes:
+        - url (str): The URL of the image.
+        - filename (str): The filename of the image.
+        - image (PIL.Image.Image): The image object.
+        - resolution (tuple): The resolution of the image (width, height).
+
+    Methods:
+        - __init__(self, url=None, filename=None): Initializes the ImageMedia object.
+        - __str__(self) -> str: Returns a string representation of the ImageMedia object.
+        - to_numpy_array(self) -> np.ndarray: Converts the image object to a NumPy array.
+        - get_canny(self, low_threshold, high_threshold) -> np.ndarray: Applies Canny edge detection to the image.
+        - get_sobel(self) -> np.ndarray: Applies Sobel edge detection to the image.
+        - resize_resolution(self, width: int, height: int) -> None: Resizes the image object to the specified resolution.
+        - resize_scale(self, scale: float) -> None: Resizes the image object by the specified scale factor.
+        - rotate(self, angle: float) -> None: Rotates the image object by the specified angle.
+        - change_format(self, new_format: str) -> None: Changes the format of the image object to the specified format.
+        - convert_to_png(self) -> np.ndarray: Changes the image to a transparent PNG and only keeps the original subject.
     """
 
     def __init__(self, url=None, filename=None):
         """
-        Initializes the Image object.
+        Initializes the ImageMedia object.
+
+        Args:
+            url (str): The URL of the image.
+            filename (str): The filename of the image.
+
+        Raises:
+            ValueError: If neither url nor filename is provided.
+            ValueError: If the URL does not exist or is not accessible.
+            ValueError: If the URL is not a valid image file.
+            FileNotFoundError: If the file does not exist in the current directory.
         """
         if not (url or filename):
             raise ValueError("Either url or filename must be provided")
@@ -70,7 +98,7 @@ class ImageMedia(Media):
         """
         return np.array(self.image)
 
-    def get_canny(self, low_threshold, high_threshold) -> np.ndarray:
+    def get_canny(self, low_threshold: int = 50, high_threshold: int = 150) -> np.ndarray:
         """
         Apply Canny edge detection to the image.
 
@@ -94,8 +122,6 @@ class ImageMedia(Media):
         delta = 0
         ddepth = cv2.CV_16S
 
-        # src = cv2.cvtColor(self.to_numpy_array(), cv2.COLOR_BGR2GRAY)
-        # src = cv2.imread(self.filename, cv2.IMREAD_COLOR)
         src = cv2.GaussianBlur(self.to_numpy_array(), (3, 3), 0)
         gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 
