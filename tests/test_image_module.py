@@ -1,5 +1,5 @@
 """
-Testing the mediagrapher module.
+Testing the image module.
 """
 
 import os
