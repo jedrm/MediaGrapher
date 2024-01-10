@@ -28,7 +28,7 @@ class Curves:
         cubic_bezier_curve(self, start_point: int, end_point: int, c1: int, c2: int, t: float) -> float: Calculates the cubic Bezier curve.
     """
 
-    def __init__(self, media: Media, algorithm: str = "Canny"):
+    def __init__(self, media: Media, algorithm: str = "Canny", thresholds: Tuple[int, int] = (50, 150)):
         """
         Initializes the Curves object.
 
@@ -42,7 +42,7 @@ class Curves:
         """
         match algorithm:
             case "Canny":
-                self.media = media.get_canny()
+                self.media = media.get_canny(low_threshold=thresholds[0], high_threshold=thresholds[1])
             case "Sobel":
                 self.media = media.get_sobel()
             case _:
@@ -136,7 +136,7 @@ class Curves:
                                        start_y, end_y, c1_y, c2_y, t))
 
                     coordinates.append([curve_x, curve_y])
-
+                start_x, start_y = end_x, end_y
         return coordinates
 
     def linear_bezier_curve(self, start_point: int, end_point: int, t: float) -> float:
