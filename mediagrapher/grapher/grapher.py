@@ -43,7 +43,7 @@ class Grapher(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def save_plot(self, frame: int, curves: Curves, output_dir: str, linspace: int = 100):
+    def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, linspace: int = 100):
         """
         Saves the current plot to a file.
 
