@@ -8,7 +8,7 @@ from io import BytesIO
 import numpy as np
 import cv2
 import requests
-from PIL import Image
+from PIL import Image, ImageOps
 from .media import Media
 
 
@@ -79,6 +79,9 @@ class ImageMedia(Media):
                     f"File {filename} does not exist in the current directory")
             self.image = Image.open(filename)
             self.resolution = self.image.size
+
+        self.rotate(180)
+        self.flip_image()
 
     def __str__(self) -> str:
         """
@@ -166,6 +169,18 @@ class ImageMedia(Media):
             angle (float): The angle in degrees to rotate the image object.
         """
         self.image = self.image.rotate(angle)
+        self.resolution = self.image.size
+
+    def flip_image(self) -> None:
+        """
+        Flips the image horizontally (left to right).
+
+        This method uses the `transpose` function from the `PIL.Image` module
+        to flip the image horizontally. It updates the `image` attribute and
+        the `resolution` attribute with the new flipped image and its size
+        respectively.
+        """
+        self.image = ImageOps.mirror(self.image)
         self.resolution = self.image.size
 
     def change_format(self, new_format: str) -> None:
