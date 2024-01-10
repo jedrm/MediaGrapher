@@ -112,6 +112,13 @@ class Media(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def flip_image(self) -> None:
+        """
+        Flips the media object horizontally.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def change_format(self, new_format: str) -> None:
         """
         Changes the format of the media object to the specified format.
