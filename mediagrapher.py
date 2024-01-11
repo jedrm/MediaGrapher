@@ -3,9 +3,33 @@ Main Program
 """
 
 import os
+import glob
+import argparse
 from mediagrapher.curves import Curves
-from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
 from mediagrapher.media.image import ImageMedia
+from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
+
+ALLOWED_ALGORITHMS = ["Canny", "Sobel"]
+
+# Argument Parser
+parser = argparse.ArgumentParser(
+    prog="MediaGrapher",
+    description="Command-line interface for graphing images and videos.")
+
+parser.add_argument('url', type=str, help="URL of the image.")
+parser.add_argument('-o', '--output', type=str,
+                    default="output", help="Output file name.")
+parser.add_argument('-a', '--algorithm', type=str,
+                    choices=ALLOWED_ALGORITHMS, default="Canny", help="Edge detection algorithm.")
+parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(30, 150), metavar=('LOW', 'HIGH'),
+                    help="Thresholds for the Canny edge detection algorithm. (default: 30, 150)")
+
+args = parser.parse_args()
+
+URL = args.url
+OUTPUT = args.output
+ALGORITHM = args.algorithm
+THRESHOLDS = args.thresholds
 
 
 def main():
@@ -23,20 +47,23 @@ def main():
     Note: This function assumes that the necessary modules and classes are imported.
     """
 
-    image = ImageMedia(
-        url="https://www.allkpop.com/upload/2023/07/content/061258/1688662714-newjeans-new-jeans-official-mv-1-30-screenshot.png")
+    image = ImageMedia(url=URL)
 
-    while image.resolution[0] > 2000 or image.resolution[1] > 2000:
-        image.resize_scale(0.75)
+    while image.resolution[0] > 1000 or image.resolution[1] > 1000:
+        image.resize_scale(0.8)
 
-    curves = Curves(image, algorithm="Canny", thresholds=(30, 150))
+    curves = Curves(image, algorithm=ALGORITHM, thresholds=THRESHOLDS)
     grapher = MatplotlibGrapher(
-        "test", (image.resolution[0], image.resolution[1]))
+        OUTPUT, (image.resolution[0], image.resolution[1]))
 
     if os.path.isdir("output"):
+        files = glob.glob("output/*")
+        for file in files:
+            os.remove(file)
         os.rmdir("output")
+
     os.mkdir("output")
-    grapher.save_plot(1, curves, "output", "Powerpuff Girls")
+    grapher.save_plot(1, curves, "output", OUTPUT)
 
 
 if __name__ == "__main__":
