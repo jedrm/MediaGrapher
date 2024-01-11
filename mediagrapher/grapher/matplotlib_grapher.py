@@ -57,7 +57,7 @@ class MatplotlibGrapher(Grapher):
         curves = curves.get_coordinates(linspace=linspace)
         for curve in curves:
             x, y = curve
-            plt.plot(x, y, linewidth=0.5, color='black')
+            plt.plot(x, y, linewidth=1, color='black')
         plt.show()
 
     def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, linspace: int = 100):
