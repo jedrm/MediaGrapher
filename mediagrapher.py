@@ -3,9 +3,9 @@ Main Program
 """
 
 import os
-from .curves import Curves
-from .grapher.matplotlib_grapher import MatplotlibGrapher
-from .media.image import ImageMedia
+from mediagrapher.curves import Curves
+from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
+from mediagrapher.media.image import ImageMedia
 
 
 def main():
