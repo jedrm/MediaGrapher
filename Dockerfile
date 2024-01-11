@@ -29,7 +29,8 @@ RUN adduser \
     appuser
 
 # Install system dependencies
-RUN apt-get install build-essential python-dev-is-python3 libagg-dev libpotrace-dev pkg-config
+RUN apt-get update && apt-get install -y apt-transport-https
+RUN apt-get install -y build-essential python-dev-is-python3 libagg-dev libpotrace-dev pkg-config
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
