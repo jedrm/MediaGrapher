@@ -3,7 +3,6 @@ Main Program
 """
 
 import os
-import glob
 import argparse
 from mediagrapher.curves import Curves
 from mediagrapher.media.image import ImageMedia
@@ -56,13 +55,9 @@ def main():
     grapher = MatplotlibGrapher(
         OUTPUT, (image.resolution[0], image.resolution[1]))
 
-    if os.path.isdir("output"):
-        files = glob.glob("output/*")
-        for file in files:
-            os.remove(file)
-        os.rmdir("output")
+    if not os.path.isdir("output"):
+        os.mkdir("output")
 
-    os.mkdir("output")
     grapher.save_plot(1, curves, "output", OUTPUT)
 
 
