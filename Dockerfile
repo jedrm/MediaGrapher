@@ -50,4 +50,4 @@ COPY . .
 # EXPOSE 8000
 
 # Run the application.
-CMD python --version
+CMD python mediagrapher.py --help
