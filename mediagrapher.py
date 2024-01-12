@@ -4,6 +4,7 @@ Main Program
 
 import os
 import argparse
+import yt_dlp
 from mediagrapher.curves import Curves
 from mediagrapher.media.image import ImageMedia
 from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
@@ -29,6 +30,35 @@ URL = args.url
 OUTPUT = args.output
 ALGORITHM = args.algorithm
 THRESHOLDS = args.thresholds
+
+
+def get_media(url: str) -> tuple:
+    """
+    Retrieves media from a given URL.
+
+    Args:
+        url (str): The URL of the media.
+
+    Returns:
+        tuple: A tuple containing the type of media ('image' or 'video') and the media itself.
+               If the URL is invalid, it returns a tuple with the type 'error' and an error message.
+    """
+    try:
+        return ("image", ImageMedia(url=url))
+    except ValueError:
+        pass
+    try:
+        options = {
+            'format': 'best',
+            'outtmpl': 'input/input.' + '%(ext)s',
+        }
+
+        with yt_dlp.YoutubeDL(options) as ydl:
+            ydl.download(['https://www.youtube.com/watch?v=Mmp-NcbA9PU'])
+
+        return ("video", "input/input.mp4")
+    except yt_dlp.utils.DownloadError:
+        return ("error", "Invalid URL.")
 
 
 def main():
