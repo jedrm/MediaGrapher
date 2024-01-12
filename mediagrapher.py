@@ -61,6 +61,31 @@ def get_media(url: str) -> tuple:
         return ("error", "Invalid URL.")
 
 
+def process_image(image: ImageMedia, frame: int = 1, output: str = "output", algorithm: str = "Canny", thresholds: tuple = (30, 150)):
+    """
+    Process an image using the specified algorithm and save the resulting plot.
+
+    Args:
+        image (ImageMedia): The input image to be processed.
+        frame (int, optional): The frame number of the image. Defaults to 1.
+        output (str, optional): The output directory to save the plot. Defaults to "output".
+        algorithm (str, optional): The algorithm to be used for processing the image. Defaults to "Canny".
+        thresholds (tuple, optional): The thresholds to be used for the algorithm. Defaults to (30, 150).
+    """
+
+    while image.resolution[0] > 1000 or image.resolution[1] > 1000:
+        image.resize_scale(0.8)
+
+    curves = Curves(image, algorithm=algorithm, thresholds=thresholds)
+    grapher = MatplotlibGrapher(
+        output, (image.resolution[0], image.resolution[1]))
+
+    if not os.path.isdir("output"):
+        os.mkdir("output")
+
+    grapher.save_plot(frame, curves, "output", output)
+
+
 def main():
     """
     This function is the entry point of the MediaGrapher application.
@@ -77,18 +102,7 @@ def main():
     """
 
     image = ImageMedia(url=URL)
-
-    while image.resolution[0] > 1000 or image.resolution[1] > 1000:
-        image.resize_scale(0.8)
-
-    curves = Curves(image, algorithm=ALGORITHM, thresholds=THRESHOLDS)
-    grapher = MatplotlibGrapher(
-        OUTPUT, (image.resolution[0], image.resolution[1]))
-
-    if not os.path.isdir("output"):
-        os.mkdir("output")
-
-    grapher.save_plot(1, curves, "output", OUTPUT)
+    process_image(image, 1, OUTPUT, ALGORITHM, THRESHOLDS)
 
 
 if __name__ == "__main__":
