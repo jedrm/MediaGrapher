@@ -20,10 +20,10 @@ class MatplotlibGrapher(Grapher):
         dpi (int): The dots per inch (dpi) of the graph.
 
     Methods:
-        plot(frame: int, curves: Curves, linspace: int = 100) -> None:
+        plot(frame: int, curves: Curves, linspace: int = 50) -> None:
             Plots the graph with the given frame, curves, and linspace.
 
-        save_plot(frame: int, curves: Curves, output_dir: str, linspace: int = 100) -> None:
+        save_plot(frame: int, curves: Curves, output_dir: str, linspace: int = 50) -> None:
             Saves the current plot to a file in the specified output directory.
     """
 
@@ -32,7 +32,7 @@ class MatplotlibGrapher(Grapher):
         self.resolution = resolution
         self.dpi = dpi
 
-    def plot(self, frame: int, curves: Curves, linspace: int = 50):
+    def plot(self, frame: int, curves: Curves, title: str, linspace: int = 50):
         """
         This method is used to plot the graph.
         It raises a NotImplementedError as it needs to be implemented in the derived class.
@@ -49,7 +49,7 @@ class MatplotlibGrapher(Grapher):
             denominator *= 1.5
 
         plt.figure(figsize=(numerator, denominator), dpi=self.dpi)
-        plt.title(f'{self.filename}')
+        plt.title(title)
         plt.xlabel(f"Frame: {frame}")
         plt.xlim(0, self.resolution[0])
         plt.ylim(0, self.resolution[1])
@@ -60,7 +60,7 @@ class MatplotlibGrapher(Grapher):
             plt.plot(x, y, linewidth=1, color='black')
         plt.show()
 
-    def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, linspace: int = 100):
+    def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, title: str, linspace: int = 50):
         """
         Saves the current plot to a file.
 
@@ -82,7 +82,7 @@ class MatplotlibGrapher(Grapher):
             denominator *= 1.5
 
         plt.figure(figsize=(numerator, denominator), dpi=self.dpi)
-        plt.title(f'{self.filename}')
+        plt.title(title)
         plt.xlabel(f"Frame: {frame}")
         plt.xlim(0, self.resolution[0])
         plt.ylim(0, self.resolution[1])
@@ -93,3 +93,4 @@ class MatplotlibGrapher(Grapher):
             plt.plot(x, y, linewidth=0.5, color='black')
 
         plt.savefig(f'{output_dir}/{output_filename}.png')
+        plt.close()

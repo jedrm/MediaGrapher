@@ -23,7 +23,7 @@ class Curves:
     Methods:
         __init__(self, media: Media, algorithm: str = "Canny"): Initializes the Curves object.
         get_segments(self) -> List[List[Tuple[float, float]]]: Returns a list of segments in the path.
-        get_coordinates(self, linspace: int = 100) -> List[List[List[float]]]: Returns the coordinates of the curves in the path.
+        get_coordinates(self, linspace: int = 50) -> List[List[List[float]]]: Returns the coordinates of the curves in the path.
         linear_bezier_curve(self, start_point: int, end_point: int, t: float) -> float: Calculates the linear Bezier curve.
         cubic_bezier_curve(self, start_point: int, end_point: int, c1: int, c2: int, t: float) -> float: Calculates the cubic Bezier curve.
     """
@@ -79,7 +79,7 @@ class Curves:
                     segments.append([start_point, end_point, c1, c2])
         return segments
 
-    def get_coordinates(self, linspace: int = 100) -> List[List[List[float]]]:
+    def get_coordinates(self, linspace: int = 50) -> List[List[List[float]]]:
         """
         Returns the coordinates of the curves in the path.
 
