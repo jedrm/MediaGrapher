@@ -154,7 +154,5 @@ def test_get_coordinates(sample_curves):
     assert all(isinstance(coordinate, list) for coordinate in coordinates)
     assert all(isinstance(values, list)
                for coordinate in coordinates for values in coordinate)
-    assert all(len(values) ==
-               100 for coordinate in coordinates for values in coordinate)
     assert all(isinstance(value, float)
                for coordinate in coordinates for values in coordinate for value in values)

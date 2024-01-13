@@ -35,7 +35,7 @@ class Grapher(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def plot(self, frame: int, curves: Curves, linspace: int = 100):
+    def plot(self, frame: int, curves: Curves, title: str, linspace: int = 50):
         """
         This method is used to plot the graph.
         It raises a NotImplementedError as it needs to be implemented in the derived class.
@@ -43,7 +43,7 @@ class Grapher(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, linspace: int = 100):
+    def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, title: str, linspace: int = 50):
         """
         Saves the current plot to a file.
 
