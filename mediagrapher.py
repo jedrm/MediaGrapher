@@ -63,7 +63,7 @@ def get_media(url: str) -> tuple:
         return ("error", "Invalid URL.")
 
 
-def process_image(image: ImageMedia, frame: int = 1, output: str = "output", algorithm: str = "Canny", thresholds: tuple = (30, 150)):
+def process_image(image: ImageMedia, title: str, frame: int = 1, output: str = "output", algorithm: str = "Canny", thresholds: tuple = (30, 150)):
     """
     Process an image using the specified algorithm and save the resulting plot.
 
@@ -85,7 +85,24 @@ def process_image(image: ImageMedia, frame: int = 1, output: str = "output", alg
     os.makedirs("output", exist_ok=True)
     os.makedirs(os.path.join("output", "frames"), exist_ok=True)
 
-    grapher.save_plot(frame, curves, "output", output)
+    grapher.save_plot(frame, curves, "output", output, title)
+
+
+def process_frame(frame: int, frames_folder: str, output_filename: str):
+    """
+    Process a single frame of an image.
+
+    Args:
+        frame (int): The frame number to process.
+        frames_folder (str): The folder path where the frames are stored.
+        output_filename (str): The filename of the output image.
+
+    Returns:
+        None
+    """
+    image = ImageMedia(filename=os.path.join(frames_folder, f"frame_{frame}.jpg"))
+    process_image(image, output_filename, frame=frame, output=os.path.join(
+        'frames', f"frame_{frame}"))
 
 
 def get_video_frames(video_path: str, output_folder: str):
