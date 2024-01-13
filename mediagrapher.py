@@ -108,6 +108,41 @@ def get_video_frames(video_path: str, output_folder: str):
     )
 
 
+def get_video_metadata(video_path):
+    """
+    Retrieves metadata for a video file.
+
+    Args:
+        video_path (str): The path to the video file.
+
+    Returns:
+        dict: A dictionary containing the following metadata:
+            - 'duration': The duration of the video in seconds (float).
+            - 'fps': The frames per second of the video (int).
+            - 'width': The width of the video in pixels (int).
+            - 'height': The height of the video in pixels (int).
+            - 'codec_name': The name of the video codec (str).
+
+    Raises:
+        ffmpeg.Error: If an error occurs while probing the video file.
+    """
+    try:
+        probe = ffmpeg.probe(video_path)
+        video_info = next(
+            s for s in probe['streams'] if s['codec_type'] == 'video')
+        metadata = {
+            'duration': float(video_info['duration']),
+            'fps': int(video_info['avg_frame_rate'].split('/')[0]) // int(video_info['avg_frame_rate'].split('/')[1]),
+            'width': int(video_info['width']),
+            'height': int(video_info['height']),
+            'codec_name': video_info['codec_name'],
+        }
+        return metadata
+    except ffmpeg.Error as e:
+        print(f"Error: {e.stderr.decode('utf-8')}")
+        return None
+
+
 def main():
     """
     This function is the entry point of the MediaGrapher application.
