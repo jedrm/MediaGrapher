@@ -4,6 +4,7 @@ Main Program
 
 import os
 import argparse
+import glob
 import yt_dlp
 import ffmpeg
 from tqdm import trange
@@ -230,8 +231,33 @@ def main():
     Note: This function assumes that the necessary modules and classes are imported.
     """
 
-    image = ImageMedia(url=URL)
-    process_image(image, 1, OUTPUT, ALGORITHM, THRESHOLDS)
+    input_frames = os.path.join("input", "frames")
+    output_frames = os.path.join("output", "frames")
+
+    os.makedirs(input_frames, exist_ok=True)
+    os.makedirs(output_frames, exist_ok=True)
+
+    input_dir = glob.glob(os.path.join("input", "*.mp4"))
+    input_frames = glob.glob(os.path.join(input_frames, "*"))
+    output_frames = glob.glob(os.path.join(output_frames, "*"))
+
+    for input_file in input_dir:
+        os.remove(input_file)
+    for input_frame in input_frames:
+        os.remove(input_frame)
+    for output_frame in output_frames:
+        os.remove(output_frame)
+
+    media_type, media = get_media(URL)
+    if media_type == "image":
+        print("Processing image...")
+        process_image(media, OUTPUT, 1, OUTPUT, ALGORITHM, THRESHOLDS)
+        print("Done.")
+    elif media_type == "video":
+        print("Processing video...")
+        process_video(media, os.path.join("input", "frames"), OUTPUT)
+    else:
+        print("Error: Could not process media.")
 
 
 if __name__ == "__main__":
