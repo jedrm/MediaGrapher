@@ -22,7 +22,7 @@ parser.add_argument('-o', '--output', type=str,
                     default="output", help="Output file name.")
 parser.add_argument('-a', '--algorithm', type=str,
                     choices=ALLOWED_ALGORITHMS, default="Canny", help="Edge detection algorithm.")
-parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(30, 150), metavar=('LOW', 'HIGH'),
+parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(20, 200), metavar=('LOW', 'HIGH'),
                     help="Thresholds for the Canny edge detection algorithm. (default: 30, 150)")
 
 args = parser.parse_args()
@@ -51,11 +51,12 @@ def get_media(url: str) -> tuple:
     try:
         options = {
             'format': 'best',
-            'outtmpl': 'input/input.' + '%(ext)s',
+            'outtmpl': os.path.join("input", "input.") + '%(ext)s',
+            'merge_output_format': 'mp4',
         }
 
         with yt_dlp.YoutubeDL(options) as ydl:
-            ydl.download(['https://www.youtube.com/watch?v=Mmp-NcbA9PU'])
+            ydl.download([url])
 
         return ("video", "input/input.mp4")
     except yt_dlp.utils.DownloadError:
@@ -81,8 +82,8 @@ def process_image(image: ImageMedia, frame: int = 1, output: str = "output", alg
     grapher = MatplotlibGrapher(
         output, (image.resolution[0], image.resolution[1]))
 
-    if not os.path.isdir("output"):
-        os.mkdir("output")
+    os.makedirs("output", exist_ok=True)
+    os.makedirs(os.path.join("output", "frames"), exist_ok=True)
 
     grapher.save_plot(frame, curves, "output", output)
 
@@ -123,7 +124,7 @@ def combine_video_frames(video_path: str, frames_folder: str, output_path: str, 
     audio = ffmpeg.input(video_path).audio
     (
         ffmpeg.input(os.path.join(
-            frames_folder, "frame_%d.jpg"), framerate=fps)
+            frames_folder, "frame_%d.png"), framerate=fps)
         .output(audio, output_path)
         .overwrite_output()
         .run(quiet=True)
@@ -158,6 +159,7 @@ def get_video_metadata(video_path):
             'width': int(video_info['width']),
             'height': int(video_info['height']),
             'codec_name': video_info['codec_name'],
+            'total_frames': video_info['nb_frames']
         }
         return metadata
     except ffmpeg.Error as e:
