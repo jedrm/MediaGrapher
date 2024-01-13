@@ -108,6 +108,28 @@ def get_video_frames(video_path: str, output_folder: str):
     )
 
 
+def combine_video_frames(video_path: str, frames_folder: str, output_path: str, fps: int):
+    """
+    Combines individual frames into a video file.
+
+    Args:
+        frames_folder (str): The folder containing the frames.
+        output_path (str): The path to the output video file.
+        fps (int): The frames per second of the video.
+
+    Returns:
+        None
+    """
+    audio = ffmpeg.input(video_path).audio
+    (
+        ffmpeg.input(os.path.join(
+            frames_folder, "frame_%d.jpg"), framerate=fps)
+        .output(audio, output_path)
+        .overwrite_output()
+        .run(quiet=True)
+    )
+
+
 def get_video_metadata(video_path):
     """
     Retrieves metadata for a video file.
