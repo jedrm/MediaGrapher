@@ -6,6 +6,8 @@ import os
 import argparse
 import yt_dlp
 import ffmpeg
+from tqdm import trange
+from joblib import Parallel, delayed
 from mediagrapher.curves import Curves
 from mediagrapher.media.image import ImageMedia
 from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
@@ -182,6 +184,35 @@ def get_video_metadata(video_path):
     except ffmpeg.Error as e:
         print(f"Error: {e.stderr.decode('utf-8')}")
         return None
+
+
+def process_video(video_path: str, frames_folder: str, output_filename: str):
+    """
+    Process a video by extracting frames, applying image processing algorithms to each frame, and combining the processed frames into a new video.
+
+    Args:
+        video_path (str): The path to the input video file.
+        frames_folder (str): The folder to store the extracted frames.
+        output_folder (str): The folder to store the output video and processed frames.
+        algorithm (str, optional): The image processing algorithm to apply to each frame. Defaults to "Canny".
+        thresholds (tuple, optional): The thresholds to be used by the image processing algorithm. Defaults to (30, 150).
+    """
+    print("Getting video metadata...")
+    metadata = get_video_metadata(video_path)
+
+    print("Extracting frames...")
+    os.makedirs(frames_folder, exist_ok=True)
+    get_video_frames(video_path, frames_folder)
+
+    print("Processing frames...")
+
+    total_frames = int(metadata['total_frames'])
+    Parallel(n_jobs=-1)(delayed(process_frame)(frame, frames_folder, output_filename) for frame in trange(1, total_frames + 1))
+
+    print("Combining frames...")
+    combine_video_frames(video_path, os.path.join(
+        'output', 'frames'), os.path.join('output', f'{output_filename}.mp4'), metadata['fps'])
+    print("Done.")
 
 
 def main():
