@@ -5,6 +5,7 @@ Main Program
 import os
 import argparse
 import yt_dlp
+import ffmpeg
 from mediagrapher.curves import Curves
 from mediagrapher.media.image import ImageMedia
 from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
@@ -84,6 +85,27 @@ def process_image(image: ImageMedia, frame: int = 1, output: str = "output", alg
         os.mkdir("output")
 
     grapher.save_plot(frame, curves, "output", output)
+
+
+def get_video_frames(video_path: str, output_folder: str):
+    """
+    Extracts frames from a video file and saves them as individual images.
+
+    Args:
+        video_path (str): The path to the video file.
+        output_folder (str): The folder where the extracted frames will be saved.
+
+    Returns:
+        None
+    """
+    os.makedirs(output_folder, exist_ok=True)
+
+    (
+        ffmpeg.input(video_path)
+        .output(os.path.join(output_folder, 'frame_%d.jpg'), start_number=1)
+        .overwrite_output()
+        .run(quiet=True)
+    )
 
 
 def main():
