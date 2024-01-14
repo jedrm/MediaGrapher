@@ -112,7 +112,7 @@ def test_cubic_bezier_curve(sample_curves, start_point, end_point, c1, c2, t, ex
     - None
     """
     result = sample_curves.cubic_bezier_curve(
-        start_point, end_point, c1, c2, t)
+        start_point, c1, c2, end_point, t)
     assert result == expected_result
 
 

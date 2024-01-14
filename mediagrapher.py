@@ -25,8 +25,8 @@ parser.add_argument('-o', '--output', type=str,
                     default="output", help="Output file name.")
 parser.add_argument('-a', '--algorithm', type=str,
                     choices=ALLOWED_ALGORITHMS, default="Canny", help="Edge detection algorithm.")
-parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(20, 200), metavar=('LOW', 'HIGH'),
-                    help="Thresholds for the Canny edge detection algorithm. (default: 30, 150)")
+parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(30, 200), metavar=('LOW', 'HIGH'),
+                    help="Thresholds for the Canny edge detection algorithm. (default: 30, 200)")
 
 args = parser.parse_args()
 
@@ -175,7 +175,7 @@ def get_video_metadata(video_path):
             s for s in probe['streams'] if s['codec_type'] == 'video')
         metadata = {
             'duration': float(video_info['duration']),
-            'fps': int(video_info['avg_frame_rate'].split('/')[0]) // int(video_info['avg_frame_rate'].split('/')[1]),
+            'fps': int(video_info['avg_frame_rate'].split('/')[0]) / int(video_info['avg_frame_rate'].split('/')[1]),
             'width': int(video_info['width']),
             'height': int(video_info['height']),
             'codec_name': video_info['codec_name'],

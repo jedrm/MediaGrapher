@@ -113,8 +113,7 @@ class ImageMedia(Media):
             np.ndarray: The resulting image after applying Canny edge detection.
         """
         src = self.to_numpy_array()
-        src = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-        src = cv2.GaussianBlur(src, (5, 5), 0)
+        src = cv2.GaussianBlur(src, (3, 3), 0)
         return cv2.Canny(src, low_threshold, high_threshold)
 
     def get_sobel(self) -> np.ndarray:

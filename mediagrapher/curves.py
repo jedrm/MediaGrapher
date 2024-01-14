@@ -72,11 +72,13 @@ class Curves:
                 end_point = segment.end_point
                 if segment.is_corner:
                     c = segment.c
-                    segments.append([start_point, end_point, c])
+                    segments.append([start_point, c])
+                    segments.append([c, end_point])
                 else:
                     c1 = segment.c1
                     c2 = segment.c2
-                    segments.append([start_point, end_point, c1, c2])
+                    segments.append([start_point, c1, c2, end_point])
+                start_point = segment.end_point
         return segments
 
     def get_coordinates(self, linspace: int = 50) -> List[List[List[float]]]:
@@ -131,9 +133,9 @@ class Curves:
                     t = np.linspace(0, 1, linspace)
 
                     curve_x = list(map(self.cubic_bezier_curve,
-                                       start_x, end_x, c1_x, c2_x, t))
+                                       start_x, c1_x, c2_x, end_x, t))
                     curve_y = list(map(self.cubic_bezier_curve,
-                                       start_y, end_y, c1_y, c2_y, t))
+                                       start_y, c1_y, c2_y, end_y, t))
 
                     coordinates.append([curve_x, curve_y])
                 start_x, start_y = end_x, end_y
@@ -153,7 +155,7 @@ class Curves:
         """
         return (1 - t) * start_point + t * end_point
 
-    def cubic_bezier_curve(self, start_point: int, end_point: int, c1: int, c2: int, t: float) -> float:
+    def cubic_bezier_curve(self, start_point: int, c1: int, c2: int, end_point: int, t: float) -> float:
         """
         Returns the cubic Bezier curve.
 
