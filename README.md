@@ -1,6 +1,6 @@
 # MediaGrapher
 
-Command-line interface program to convert images into Matplotlib graph. Uses Canny edge detection algorithm and Potrace edge detection to graph Bezier curves on Matplotlib graph.
+Open-source command-line interface program to convert images and videos into Matplotlib graph. Uses Canny edge detection algorithm and Potrace edge detection to graph Bezier curves on Matplotlib graph.
 
 ## Setup
 
@@ -77,7 +77,7 @@ options:
   -a {Canny,Sobel}, --algorithm {Canny,Sobel}
                         Edge detection algorithm.
   -t LOW HIGH, --thresholds LOW HIGH
-                        Thresholds for the Canny edge detection algorithm. (default: 30, 150)
+                        Thresholds for the Canny edge detection algorithm. (default: 30, 200)
 ```
 
 ## Credits
