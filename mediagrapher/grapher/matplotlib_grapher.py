@@ -4,6 +4,8 @@ Matplotlib Grapher Class
 
 from fractions import Fraction
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib.path as mpath
 from .grapher import Grapher
 from ..curves import Curves
 
@@ -48,16 +50,24 @@ class MatplotlibGrapher(Grapher):
             numerator *= 1.5
             denominator *= 1.5
 
-        plt.figure(figsize=(numerator, denominator), dpi=self.dpi)
-        plt.title(title)
-        plt.xlabel(f"Frame: {frame}")
-        plt.xlim(0, self.resolution[0])
-        plt.ylim(0, self.resolution[1])
+        _, ax = plt.subplots(figsize=(numerator, denominator), dpi=self.dpi)
+        ax.set_title(title)
+        ax.set_xlabel(f"Frame: {frame}")
+        ax.set_xlim(0, self.resolution[0])
+        ax.set_ylim(0, self.resolution[1])
 
-        curves = curves.get_coordinates(linspace=linspace)
+        curves = curves.get_segments()
+        Path = mpath.Path
         for curve in curves:
-            x, y = curve
-            plt.plot(x, y, linewidth=1, color='black')
+            if len(curve) == 4:
+                path_curve = Path(
+                    curve, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
+            else:
+                path_curve = Path(curve, [Path.MOVETO, Path.LINETO])
+            path_patch = mpatches.PathPatch(
+                path_curve, aa=None, fc="none", ec=None, lw=0.5)
+            ax.add_patch(path_patch)
+
         plt.show()
 
     def save_plot(self, frame: int, curves: Curves, output_dir: str, output_filename: str, title: str, linspace: int = 50):
@@ -81,16 +91,23 @@ class MatplotlibGrapher(Grapher):
             numerator *= 1.5
             denominator *= 1.5
 
-        plt.figure(figsize=(numerator, denominator), dpi=self.dpi)
-        plt.title(title)
-        plt.xlabel(f"Frame: {frame}")
-        plt.xlim(0, self.resolution[0])
-        plt.ylim(0, self.resolution[1])
+        _, ax = plt.subplots(figsize=(numerator, denominator), dpi=self.dpi)
+        ax.set_title(title)
+        ax.set_xlabel(f"Frame: {frame}")
+        ax.set_xlim(0, self.resolution[0])
+        ax.set_ylim(0, self.resolution[1])
 
-        curves = curves.get_coordinates(linspace=linspace)
+        curves = curves.get_segments()
+        Path = mpath.Path
         for curve in curves:
-            x, y = curve
-            plt.plot(x, y, linewidth=0.5, color='black')
+            if len(curve) == 4:
+                path_curve = Path(
+                    curve, [Path.MOVETO, Path.CURVE4, Path.CURVE4, Path.CURVE4])
+            else:
+                path_curve = Path(curve, [Path.MOVETO, Path.LINETO])
+            path_patch = mpatches.PathPatch(
+                path_curve, aa=None, fc="none", ec=None, lw=0.5)
+            ax.add_patch(path_patch)
 
         plt.savefig(f'{output_dir}/{output_filename}.png')
         plt.close()
