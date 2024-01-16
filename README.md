@@ -37,6 +37,7 @@ UNIX
 ```bash
 virtualenv env
 source env/bin/activate
+pip install -r requirements.txt
 ```
 
 Windows
@@ -44,6 +45,7 @@ Windows
 ```bash
 virtualenv --python C:\Path\To\Python\python.exe env
 .\env\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ## Running the Program
