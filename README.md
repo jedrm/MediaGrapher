@@ -28,7 +28,7 @@ OSX
 brew install libagg pkg-config potrace
 ```
 
-For Windows instructions, please follow the instructions listed for Windows under ![pypotrace](https://pypi.org/project/pypotrace/).
+For Windows instructions, please follow the instructions listed for Windows under [pypotrace](https://pypi.org/project/pypotrace/).
 
 ### Install project dependencies
 
