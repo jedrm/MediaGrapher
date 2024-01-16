@@ -12,7 +12,7 @@ Ubuntu
 
 ```bash
 sudo apt update
-sudo apt install git python3-dev python3-pip build-essential libagg-dev libpotrace-dev pkg-config
+sudo apt install git python3-dev python3-pip build-essential libagg-dev libpotrace-dev pkg-config ffmpeg
 ```
 
 CentOS/RedHat
@@ -75,13 +75,13 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -o OUTPUT, --output OUTPUT
-                        Output file name.
+                        Output file name. (default name: output)
   -a {Canny,Sobel}, --algorithm {Canny,Sobel}
-                        Edge detection algorithm.
+                        Edge detection algorithm. (default algorithm: canny)
   -t LOW HIGH, --thresholds LOW HIGH
                         Thresholds for the Canny edge detection algorithm. (default: 30, 200)
 ```
 
 ## Credits
 
-This project is heavily influenced by the following ![GitHub repository](https://github.com/kevinjycui/DesmosBezierRenderer).
+This project is heavily influenced by the following [GitHub repository](https://github.com/kevinjycui/DesmosBezierRenderer).
