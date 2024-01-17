@@ -65,7 +65,7 @@ python mediagrapher.py --help
 Output:
 
 ```bash
-usage: MediaGrapher [-h] [-o OUTPUT] [-a {Canny,Sobel}] [-t LOW HIGH] url
+usage: MediaGrapher [-h] [-o OUTPUT] [-a {Canny,Sobel}] [-t LOW HIGH] [-p threads] url
 
 Command-line interface for graphing images and videos.
 
@@ -80,6 +80,8 @@ options:
                         Edge detection algorithm. (default algorithm: canny)
   -t LOW HIGH, --thresholds LOW HIGH
                         Thresholds for the Canny edge detection algorithm. (default: 30, 200)
+  -p THREADS, --threads THREADS
+                        Number of threads utilized on the CPU. (default: MAX_THREADS)
 ```
 
 ## Credits
