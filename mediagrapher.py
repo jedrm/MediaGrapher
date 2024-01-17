@@ -28,9 +28,8 @@ parser.add_argument('-a', '--algorithm', type=str,
                     choices=ALLOWED_ALGORITHMS, default="Canny", help="Edge detection algorithm.")
 parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(30, 200), metavar=('LOW', 'HIGH'),
                     help="Thresholds for the Canny edge detection algorithm. (default: 30, 200)")
-parser.add_argument('-p', '--threads', type=int, default=MAX_THREADS, 
+parser.add_argument('-p', '--threads', type=int, default=MAX_THREADS,
                     help="Number of threads utilized on the CPU. (default: os.MAX_THREADS)")
-
 args = parser.parse_args()
 
 URL = args.url
@@ -202,7 +201,7 @@ def process_video(video_path: str, frames_folder: str, output_filename: str, thr
         thresholds (tuple, optional): The thresholds to be used by the image processing algorithm. Defaults to (30, 150).
         threads (int, optional): 
     """
-    threads = min(MAX_THREADS, max(4, threads))  # Limit to available threads and minimum of 4
+    threads = min(MAX_THREADS, max(4, threads)) # Limit to available threads and minimum of 4
  
     print(f"Utilizing {threads} threads...")
     print("Getting video metadata...")
@@ -218,8 +217,8 @@ def process_video(video_path: str, frames_folder: str, output_filename: str, thr
     Parallel(n_jobs=threads)(delayed(process_frame)(frame, frames_folder, output_filename) for frame in trange(1, total_frames + 1))
     
     print("Combining frames...")
-    combine_video_frames(video_path, os.path.join(
-        'output', 'frames'), os.path.join('output', f'{output_filename}.mp4'), metadata['fps'])
+    combine_video_frames(video_path, os.path.join('output', 'frames'),
+                          os.path.join('output', f'{output_filename}.mp4'), metadata['fps'])
     print("Done.")
 
 
