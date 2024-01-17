@@ -14,6 +14,7 @@ from mediagrapher.media.image import ImageMedia
 from mediagrapher.grapher.matplotlib_grapher import MatplotlibGrapher
 
 ALLOWED_ALGORITHMS = ["Canny", "Sobel"]
+MAX_THREADS = os.cpu_count()
 
 # Argument Parser
 parser = argparse.ArgumentParser(
@@ -27,6 +28,8 @@ parser.add_argument('-a', '--algorithm', type=str,
                     choices=ALLOWED_ALGORITHMS, default="Canny", help="Edge detection algorithm.")
 parser.add_argument('-t', '--thresholds', type=int, nargs=2, default=(30, 200), metavar=('LOW', 'HIGH'),
                     help="Thresholds for the Canny edge detection algorithm. (default: 30, 200)")
+parser.add_argument('-p', '--threads', type=int, default=MAX_THREADS, 
+                    help="Number of threads utilized on the CPU. (default: os.MAX_THREADS)")
 
 args = parser.parse_args()
 
@@ -34,7 +37,7 @@ URL = args.url
 OUTPUT = args.output
 ALGORITHM = args.algorithm
 THRESHOLDS = args.thresholds
-
+THREADS = args.threads
 
 def get_media(url: str) -> tuple:
     """
@@ -187,7 +190,7 @@ def get_video_metadata(video_path):
         return None
 
 
-def process_video(video_path: str, frames_folder: str, output_filename: str):
+def process_video(video_path: str, frames_folder: str, output_filename: str, threads: int):
     """
     Process a video by extracting frames, applying image processing algorithms to each frame, and combining the processed frames into a new video.
 
@@ -197,7 +200,11 @@ def process_video(video_path: str, frames_folder: str, output_filename: str):
         output_folder (str): The folder to store the output video and processed frames.
         algorithm (str, optional): The image processing algorithm to apply to each frame. Defaults to "Canny".
         thresholds (tuple, optional): The thresholds to be used by the image processing algorithm. Defaults to (30, 150).
+        threads (int, optional): 
     """
+    threads = min(MAX_THREADS, max(4, threads))  # Limit to available threads and minimum of 4
+ 
+    print(f"Utilizing {threads} threads...")
     print("Getting video metadata...")
     metadata = get_video_metadata(video_path)
 
@@ -208,8 +215,8 @@ def process_video(video_path: str, frames_folder: str, output_filename: str):
     print("Processing frames...")
 
     total_frames = int(metadata['total_frames'])
-    Parallel(n_jobs=-1)(delayed(process_frame)(frame, frames_folder, output_filename) for frame in trange(1, total_frames + 1))
-
+    Parallel(n_jobs=threads)(delayed(process_frame)(frame, frames_folder, output_filename) for frame in trange(1, total_frames + 1))
+    
     print("Combining frames...")
     combine_video_frames(video_path, os.path.join(
         'output', 'frames'), os.path.join('output', f'{output_filename}.mp4'), metadata['fps'])
@@ -255,7 +262,7 @@ def main():
         print("Done.")
     elif media_type == "video":
         print("Processing video...")
-        process_video(media, os.path.join("input", "frames"), OUTPUT)
+        process_video(media, os.path.join("input", "frames"), OUTPUT, THREADS)
     else:
         print("Error: Could not process media.")
 
