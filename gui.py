@@ -1,9 +1,11 @@
 import sys
+from PyQt6 import QtGui
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QResizeEvent, QCursor
+
 from PyQt6.QtWidgets import (QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
      QMenu, QPushButton, QVBoxLayout, QWidget)
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QRect, QEvent
 
 # Create the app's main window
 class MainWindow(QMainWindow):
@@ -27,21 +29,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(button)
         self.show()
 
-    #Resizing Window
-    def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            self.resizing = True
-            self.resize_start = QSize(event.globalX(), event.globalY())
+    def resizeEvent (self, event: QtGui.QResizeEvent) -> None:
+        QMainWindow.resizeEvent(self, event)
 
-    def mouseMoveEvent(self, event):
-        if self.resizing:
-            new_size = QSize(event.globalX(), event.globalY()) - self.resize_start
-            self.resize(self.width() + new_size.width(), self.height() + new_size.height())
-            self.resize_start = QSize(event.globalX(), event.globalY())
-
-    def mouseReleaseEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            self.resizing = False
 
 # Create the app, the main window, and run the app
 if __name__ == "__main__":
