@@ -65,9 +65,13 @@ class MainWindow(QMainWindow):
         QMainWindow.resizeEvent(self, event)
     
     def setParameters(self):
+        #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         pass
 
-
+class settingWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        
 # Create the app, the main window, and run the app
 if __name__ == "__main__":
     app = QApplication(sys.argv)
