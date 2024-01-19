@@ -61,13 +61,23 @@ class MainWindow(QMainWindow):
         self.w.show()     
 
     def initInputField(self):
+        self.inputBox = QHBoxLayout()
+        self.inputLabel = QLabel("Enter URL: ")
         self.inputField = QLineEdit()
         self.inputField.setPlaceholderText("Enter URL for Image/Video")
-        self.layout.addWidget(self.inputField)
+        self.inputLabel.setBuddy(self.inputField)
+        self.inputBox.addWidget(self.inputLabel)
+        self.inputBox.addWidget(self.inputField)
+        self.layout.addLayout(self.inputBox)
 
+        self.outputBox = QHBoxLayout()
+        self.outputLabel = QLabel("Output File Name: ")
         self.outputFileName = QLineEdit()
         self.outputFileName.setPlaceholderText("Enter Output File Name")
-        self.layout.addWidget(self.outputFileName)
+        self.outputLabel.setBuddy(self.outputFileName)
+        self.outputBox.addWidget(self.outputLabel)
+        self.outputBox.addWidget(self.outputFileName)
+        self.layout.addLayout(self.outputBox)
 
     def initScriptButton(self):
         #Button to run script
