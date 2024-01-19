@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
 
 from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
-     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton)
+     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton,QDialogButtonBox, QGroupBox)
 from PyQt6.QtCore import Qt, QSize, QRect, QEvent, QSettings
 
 # Create the app's main window
@@ -16,6 +16,9 @@ class MainWindow(QMainWindow):
         self.getSettingValues()
     
     def getSettingValues(self):
+        #https://www.youtube.com/watch?v=f6jGVlTqGSI&ab_channel=JieJenn
+        #https://doc.qt.io/qt-6/restoring-geometry.html
+
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size')
         self.restoreGeometry(self.setting_geometry.value('Window Size'))
 
@@ -62,6 +65,10 @@ class MainWindow(QMainWindow):
         self.inputField.setPlaceholderText("Enter URL for Image/Video")
         self.layout.addWidget(self.inputField)
 
+        self.outputFileName = QLineEdit()
+        self.outputFileName.setPlaceholderText("Enter Output File Name")
+        self.layout.addWidget(self.outputFileName)
+
     def initScriptButton(self):
         #Button to run script
         button = QPushButton("Download and Graph Image/Video")
@@ -72,7 +79,8 @@ class MainWindow(QMainWindow):
     
     def runScript(self):
         try:
-            subprocess.run(["python", "mediagrapher.py", self.inputField.text()])
+            output_flag = ["-o", self.outputFileName.text()] if self.outputFileName.text() else []
+            subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag)
         except Exception as e:
             print(f"Error running script: {e}")
 
@@ -93,35 +101,37 @@ class MainWindow(QMainWindow):
         #self.w = settingWindow()
         pass
         
-class settingWindow(QWidget):
+class settingWindow(QDialog):
     def __init__(self):
         super().__init__()
-        self.resize(500,350)
-        layout = QVBoxLayout()
-        self.label = QLabel("Settings")
-        layout.addWidget(self.label)
-        self.setLayout(layout)
+        self.resize(300,250)
+        self.layout = QVBoxLayout()
+        self.setWindowTitle("Parameters")
 
-        #Probably best to enter in the main window
-        output_filename = QLineEdit()
-        layout.addWidget(output_filename)
+        self.algorithmParameters()
 
-        #self.layout.addWidget(QLabel("Algorithm"))
+        self.setLayout(self.layout)
+
+    def update(self):
+        #gets radio button value
+        rb = self.sender()
+        #check if radio button is checked
+        if rb.isChecked():
+            print(f"{rb.text()} is selected")
+    
+    def algorithmParameters(self):
+        algoBox = QGroupBox("Algorithm")
+        algoRadio = QVBoxLayout()
         algo_canny = QRadioButton("Canny", self)
         algo_canny.toggled.connect(self.update)
         algo_sobel = QRadioButton("Sobel", self)
         algo_sobel.toggled.connect(self.update)
 
-        layout.addWidget(algo_canny)
-        layout.addWidget(algo_sobel)
+        algoRadio.addWidget(algo_canny)
+        algoRadio.addWidget(algo_sobel)
+        algoBox.setLayout(algoRadio)
 
-    def update(self):
-        #gets radio button value
-        rb = self.sender()
-
-        #check if radio button is checked
-        if rb.isChecked():
-            print(f"{rb.text()} is selected")
+        self.layout.addWidget(algoBox)
 
     
 
