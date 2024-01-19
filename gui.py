@@ -5,7 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
 
 from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
-     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog)
+     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton)
 from PyQt6.QtCore import Qt, QSize, QRect, QEvent, QSettings
 
 # Create the app's main window
@@ -93,13 +93,37 @@ class MainWindow(QMainWindow):
         #self.w = settingWindow()
         pass
         
-class settingWindow(QDialog):
+class settingWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.resize(500,350)
         layout = QVBoxLayout()
         self.label = QLabel("Settings")
         layout.addWidget(self.label)
         self.setLayout(layout)
+
+        #Probably best to enter in the main window
+        output_filename = QLineEdit()
+        layout.addWidget(output_filename)
+
+        #self.layout.addWidget(QLabel("Algorithm"))
+        algo_canny = QRadioButton("Canny", self)
+        algo_canny.toggled.connect(self.update)
+        algo_sobel = QRadioButton("Sobel", self)
+        algo_sobel.toggled.connect(self.update)
+
+        layout.addWidget(algo_canny)
+        layout.addWidget(algo_sobel)
+
+    def update(self):
+        #gets radio button value
+        rb = self.sender()
+
+        #check if radio button is checked
+        if rb.isChecked():
+            print(f"{rb.text()} is selected")
+
+    
 
 # Create the app, the main window, and run the app
 if __name__ == "__main__":
