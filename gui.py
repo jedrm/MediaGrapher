@@ -4,7 +4,7 @@ from PyQt6 import QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
 
-from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
+from PyQt6.QtWidgets import (QMenu, QHBoxLayout, QComboBox,QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
      QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton,QDialogButtonBox, QGroupBox)
 from PyQt6.QtCore import Qt, QSize, QRect, QEvent, QSettings
 
@@ -120,18 +120,14 @@ class settingWindow(QDialog):
             print(f"{rb.text()} is selected")
     
     def algorithmParameters(self):
-        algoBox = QGroupBox("Algorithm")
-        algoRadio = QVBoxLayout()
-        algo_canny = QRadioButton("Canny", self)
-        algo_canny.toggled.connect(self.update)
-        algo_sobel = QRadioButton("Sobel", self)
-        algo_sobel.toggled.connect(self.update)
-
-        algoRadio.addWidget(algo_canny)
-        algoRadio.addWidget(algo_sobel)
-        algoBox.setLayout(algoRadio)
-
-        self.layout.addWidget(algoBox)
+        algoComboBox = QComboBox()
+        algoComboBox.addItems(["Canny", "Sobel"])
+        algoLabel = QLabel("Algorithm")
+        algoLabel.setBuddy(algoComboBox)
+        topLayout = QHBoxLayout()
+        topLayout.addWidget(algoLabel)
+        topLayout.addWidget(algoComboBox)
+        self.layout.addLayout(topLayout)
 
     
 
