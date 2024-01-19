@@ -38,12 +38,14 @@ class MainWindow(QMainWindow):
         
     def initMenu(self):
         #Set Parameters
-        self.w = None
+        self.w = settingWindow()
         setParametersAct = QAction('&Set Parameters', self)
-        setParametersAct.triggered.connect(self.show_new_window)
+        setParametersAct.setShortcut('Ctrl+P')
+        setParametersAct.triggered.connect(self.show_settingWindow)
 
         #Exit Action
         exitAct = QAction('&Exit', self)
+        exitAct.setShortcut('Ctrl+Q')
         exitAct.triggered.connect(self.close)
 
         #Menu Bar
@@ -51,19 +53,10 @@ class MainWindow(QMainWindow):
         menuMediaGrapher = menuBar.addMenu("Media Grapher")
         menuMediaGrapher.addAction(setParametersAct)
         menuMediaGrapher.addAction(exitAct)
-    
-    def show_new_window(self,checked):
-        if self.w is None:
-            self.w = settingWindow()
-        self.w.show()
-    
-    # def toggle_window(self, checked):
-    #     if self.w.isVisible():
-    #         self.w.hide()
-    #     else:
-    #         self.w.show()
 
-        
+    def show_settingWindow(self, checked):
+        #Shows Setting Window
+        self.w.show()     
 
     def initInputField(self):
         self.inputField = QLineEdit()
@@ -75,6 +68,7 @@ class MainWindow(QMainWindow):
         button = QPushButton("Download and Graph Image/Video")
         #button.clicked.connect(self.close) #close window for now, implement logic for button later
         button.clicked.connect(self.runScript)
+        button.setShortcut("Return")
         self.layout.addWidget(button)
     
     def runScript(self):
