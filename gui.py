@@ -33,17 +33,18 @@ class MainWindow(QMainWindow):
         self.layout = QVBoxLayout(central)
 
         self.initMenu()
+        self.algorithmParameters()
         self.initInputField()
         self.initScriptButton()
         
         self.show()
         
     def initMenu(self):
-        #Set Parameters
-        self.w = settingWindow()
-        setParametersAct = QAction('&Set Parameters', self)
-        setParametersAct.setShortcut('Ctrl+P')
-        setParametersAct.triggered.connect(self.show_settingWindow)
+        #Set Parameters Settings Window (Uncomment to Add Settings Window)
+        # self.w = settingWindow()
+        # setParametersAct = QAction('&Set Parameters', self)
+        # setParametersAct.setShortcut('Ctrl+P')
+        # setParametersAct.triggered.connect(self.show_settingWindow)
 
         #Exit Action
         exitAct = QAction('&Exit', self)
@@ -53,12 +54,23 @@ class MainWindow(QMainWindow):
         #Menu Bar
         menuBar = self.menuBar()
         menuMediaGrapher = menuBar.addMenu("Media Grapher")
-        menuMediaGrapher.addAction(setParametersAct)
+        #menuMediaGrapher.addAction(setParametersAct)
         menuMediaGrapher.addAction(exitAct)
 
-    def show_settingWindow(self, checked):
-        #Shows Setting Window
-        self.w.show()     
+        #Uncomment to add Settings Window
+    # def show_settingWindow(self, checked):
+    #     #Shows Setting Window
+    #     self.w.show()     
+
+    def algorithmParameters(self):
+        self.algoComboBox = QComboBox()
+        self.algoComboBox.addItems(["Canny", "Sobel"])
+        algoLabel = QLabel("Algorithm")
+        algoLabel.setBuddy(self.algoComboBox)
+        topLayout = QHBoxLayout()
+        topLayout.addWidget(algoLabel)
+        topLayout.addWidget(self.algoComboBox)
+        self.layout.addLayout(topLayout)
 
     def initInputField(self):
         self.inputBox = QHBoxLayout()
@@ -89,8 +101,10 @@ class MainWindow(QMainWindow):
     
     def runScript(self):
         try:
+            print(self.algoComboBox.currentText())
             output_flag = ["-o", self.outputFileName.text()] if self.outputFileName.text() else []
-            subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag)
+            algo_flag = ["-a", self.algoComboBox.currentText()] if self.algoComboBox.currentText() else []
+            subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
         except Exception as e:
             print(f"Error running script: {e}")
 
@@ -110,7 +124,8 @@ class MainWindow(QMainWindow):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         #self.w = settingWindow()
         pass
-        
+
+'''
 class settingWindow(QDialog):
     def __init__(self):
         super().__init__()
@@ -138,7 +153,7 @@ class settingWindow(QDialog):
         topLayout.addWidget(algoLabel)
         topLayout.addWidget(algoComboBox)
         self.layout.addLayout(topLayout)
-
+'''
     
 
 # Create the app, the main window, and run the app
