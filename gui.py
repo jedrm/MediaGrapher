@@ -5,18 +5,26 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
 
 from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
-     QMenu, QPushButton, QVBoxLayout, QWidget)
-from PyQt6.QtCore import Qt, QSize, QRect, QEvent
-
+     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog)
+from PyQt6.QtCore import Qt, QSize, QRect, QEvent, QSettings
 
 # Create the app's main window
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUi()
+        self.getSettingValues()
+    
+    #https://doc.qt.io/qt-6/restoring-geometry.html
+    def getSettingValues(self):
+        self.setting_geometry = QSettings('MediaGrapher', 'Window Size')
+        self.restoreGeometry(self.setting_geometry.value('Window Size'))
+
+        #self.setting_parameters = QSettings('MediaGrapher', 'Parameters')
+
     def initUi(self):
         self.setWindowTitle("MediaGrapher")
-        self.resize(500,350) #width, height
+        #self.resize(500,350) #width, height
 
         central = QWidget()
         self.setCentralWidget(central)
@@ -70,17 +78,22 @@ class MainWindow(QMainWindow):
             print(f"Error running script: {e}")
 
     def resizeEvent (self, event: QtGui.QResizeEvent) -> None:
-        print("Resizing")
         #Doesn't change cursor yet
-        QMainWindow.setCursor(self, QCursor(Qt.CursorShape.ForbiddenCursor))
+        #QApplication.setOverrideCursor(Qt.CursorShape.BusyCursor)
+        self.setCursor(Qt.CursorShape.SizeBDiagCursor) #changes cursor, but doesn't work here or when resetting
+
         #QMainWindow.resizeEvent(self, event)
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        #Saves window size
+        #self.setting_geometry.setValue('Window Size', self.saveGeometry())
 
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         #self.w = settingWindow()
         pass
         
-class settingWindow(QWidget):
+class settingWindow(QDialog):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
