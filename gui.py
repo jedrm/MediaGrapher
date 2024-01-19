@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         self.initUi()
         self.getSettingValues()
     
-    #https://doc.qt.io/qt-6/restoring-geometry.html
     def getSettingValues(self):
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size')
         self.restoreGeometry(self.setting_geometry.value('Window Size'))
@@ -86,6 +85,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         #Saves window size
+        self.setting_geometry = QSettings('MediaGrapher', 'Window Size').setValue('Window Size', self.saveGeometry())
         #self.setting_geometry.setValue('Window Size', self.saveGeometry())
 
     def setParameters(self):
