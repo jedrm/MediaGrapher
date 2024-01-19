@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         self.initMenu()
         self.initInputField()
         self.initScriptButton()
-
+        
         self.show()
         
     def initMenu(self):
@@ -70,11 +70,15 @@ class MainWindow(QMainWindow):
             print(f"Error running script: {e}")
 
     def resizeEvent (self, event: QtGui.QResizeEvent) -> None:
-        QMainWindow.resizeEvent(self, event)
-        QMainWindow.setCursor(self, QCursor(Qt.CursorShape.SizeFDiagCursor))
+        print("Resizing")
+        #Doesn't change cursor yet
+        QMainWindow.setCursor(self, QCursor(Qt.CursorShape.ForbiddenCursor))
+        #QMainWindow.resizeEvent(self, event)
+
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
-        self.w = settingWindow()
+        #self.w = settingWindow()
+        pass
         
 class settingWindow(QWidget):
     def __init__(self):
