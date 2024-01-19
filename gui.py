@@ -8,20 +8,12 @@ from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDial
      QMenu, QPushButton, QVBoxLayout, QWidget)
 from PyQt6.QtCore import Qt, QSize, QRect, QEvent
 
-class settingWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        self.label = QLabel("Settings")
-        layout.addWidget(self.label)
-        self.setLayout(layout)
 
 # Create the app's main window
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUi()
-
     def initUi(self):
         self.setWindowTitle("MediaGrapher")
         self.resize(500,350) #width, height
@@ -66,7 +58,7 @@ class MainWindow(QMainWindow):
     def initScriptButton(self):
         #Button to run script
         button = QPushButton("Download and Graph Image/Video")
-        #button.clicked.connect(self.close) #close window for now, implement logic for button later
+        button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         button.clicked.connect(self.runScript)
         button.setShortcut("Return")
         self.layout.addWidget(button)
@@ -79,11 +71,18 @@ class MainWindow(QMainWindow):
 
     def resizeEvent (self, event: QtGui.QResizeEvent) -> None:
         QMainWindow.resizeEvent(self, event)
-    
+        QMainWindow.setCursor(self, QCursor(Qt.CursorShape.SizeFDiagCursor))
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         self.w = settingWindow()
         
+class settingWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.label = QLabel("Settings")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
 # Create the app, the main window, and run the app
 if __name__ == "__main__":
