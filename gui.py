@@ -8,6 +8,14 @@ from PyQt6.QtWidgets import (QMenu, QLineEdit, QTextEdit,QApplication, QFileDial
      QMenu, QPushButton, QVBoxLayout, QWidget)
 from PyQt6.QtCore import Qt, QSize, QRect, QEvent
 
+class settingWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.label = QLabel("Settings")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
 # Create the app's main window
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -30,8 +38,9 @@ class MainWindow(QMainWindow):
         
     def initMenu(self):
         #Set Parameters
+        self.w = None
         setParametersAct = QAction('&Set Parameters', self)
-        setParametersAct.triggered.connect(self.setParameters)
+        setParametersAct.triggered.connect(self.show_new_window)
 
         #Exit Action
         exitAct = QAction('&Exit', self)
@@ -42,6 +51,19 @@ class MainWindow(QMainWindow):
         menuMediaGrapher = menuBar.addMenu("Media Grapher")
         menuMediaGrapher.addAction(setParametersAct)
         menuMediaGrapher.addAction(exitAct)
+    
+    def show_new_window(self,checked):
+        if self.w is None:
+            self.w = settingWindow()
+        self.w.show()
+    
+    # def toggle_window(self, checked):
+    #     if self.w.isVisible():
+    #         self.w.hide()
+    #     else:
+    #         self.w.show()
+
+        
 
     def initInputField(self):
         self.inputField = QLineEdit()
@@ -66,12 +88,9 @@ class MainWindow(QMainWindow):
     
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
-        pass
-
-class settingWindow(QWidget):
-    def __init__(self):
-        super().__init__()
+        self.w = settingWindow()
         
+
 # Create the app, the main window, and run the app
 if __name__ == "__main__":
     app = QApplication(sys.argv)
