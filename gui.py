@@ -1,13 +1,14 @@
 import os
 import sys
 import subprocess
+
 from PyQt6 import QtGui, QtWidgets
 from PyQt6.QtCore import Qt, QProcess
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
-
-from PyQt6.QtWidgets import (QMenu, QHBoxLayout, QComboBox,QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
-     QMenu, QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton,QDialogButtonBox, QGroupBox)
-from PyQt6.QtCore import Qt, QSize, QRect, QEvent, QSettings
+from PyQt6.QtWidgets import (QMenu, QHBoxLayout, QComboBox,QLineEdit, QTextEdit, QApplication, QLabel, QMainWindow,
+    QPushButton, QVBoxLayout, QWidget, QApplication, QDialog, QRadioButton,QDialogButtonBox, QGroupBox)
+from PyQt6.QtCore import Qt,QSettings
+from superqt import QLabeledRangeSlider
 
 # Create the app's main window
 class MainWindow(QMainWindow):
@@ -16,15 +17,14 @@ class MainWindow(QMainWindow):
         self.initUi()
         self.getSettingValues()
     
+    # TODO: Save choice of algorithm and thresholds for a user future use
     def getSettingValues(self):
-        #https://www.youtube.com/watch?v=f6jGVlTqGSI&ab_channel=JieJenn
-        #https://doc.qt.io/qt-6/restoring-geometry.html
-
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size')
         self.restoreGeometry(self.setting_geometry.value('Window Size'))
 
         #self.setting_parameters = QSettings('MediaGrapher', 'Parameters')
 
+    # TODO Changing cursor icon when resizing window
     def initUi(self):
         self.setWindowTitle("MediaGrapher")
         #self.resize(500,350) #width, height
@@ -38,11 +38,12 @@ class MainWindow(QMainWindow):
 
         self.initMenu()
         self.algorithmParameters()
+        self.thresholdsParameter()
         self.initInputField()
         self.initScriptButton()
+
         self.terminalResults = QTextEdit()
         self.terminalOutput()
-        self.layout.addWidget(self.terminalResults)
         
         self.show()
         
@@ -64,7 +65,7 @@ class MainWindow(QMainWindow):
         #menuMediaGrapher.addAction(setParametersAct)
         menuMediaGrapher.addAction(exitAct)
 
-        #Uncomment to add Settings Window
+    #Uncomment to add a Settings Window
     # def show_settingWindow(self, checked):
     #     #Shows Setting Window
     #     self.w.show()     
@@ -72,12 +73,28 @@ class MainWindow(QMainWindow):
     def algorithmParameters(self):
         self.algoComboBox = QComboBox()
         self.algoComboBox.addItems(["Canny", "Sobel"])
-        algoLabel = QLabel("Algorithm")
+        algoLabel = QLabel("Algorithm: ")
         algoLabel.setBuddy(self.algoComboBox)
-        topLayout = QHBoxLayout()
-        topLayout.addWidget(algoLabel)
-        topLayout.addWidget(self.algoComboBox)
-        self.layout.addLayout(topLayout)
+        algoLayout = QHBoxLayout()
+        algoLayout.addWidget(algoLabel)
+        algoLayout.addWidget(self.algoComboBox)
+        self.layout.addLayout(algoLayout)
+
+    def thresholdsParameter(self):
+        thresholdLabel = QLabel("Set Algorithm Thresholds: ")  
+        thresholdLayout = QHBoxLayout()
+        self.thresholdSlider = QLabeledRangeSlider(Qt.Orientation.Horizontal)
+        self.thresholdSlider.setRange(0,255)
+        self.thresholdSlider.setSliderPosition((30,150))
+        self.thresholdSlider.setTickInterval(10)
+        thresholdLabel.setBuddy(self.thresholdSlider)
+        thresholdLayout.addWidget(thresholdLabel)
+        thresholdLayout.addWidget(self.thresholdSlider)
+
+        #self.threshold = [str(self.thresholdSlider.value()[0]),str(self.thresholdSlider.value()[1])]
+        self.threshold = [str(value) for value in self.thresholdSlider.value()]
+
+        self.layout.addLayout(thresholdLayout)
 
     def initInputField(self):
         self.inputBox = QHBoxLayout()
@@ -108,24 +125,23 @@ class MainWindow(QMainWindow):
     
     def terminalOutput(self):
         self.terminalResults.setPlaceholderText("Terminal Results")
-
         cursor = self.terminalResults.textCursor()
         self.terminalResults.setReadOnly(True)
-        #cursor.movePosition(cursor.End)
+        cursor.movePosition(cursor.atEnd)
         cursor.insertText(self.process.readAll().data().decode())
         self.terminalResults.ensureCursorVisible()
+        self.layout.addWidget(self.terminalResults)
         
-
-
     def runScript(self):
         try:
-            print(self.algoComboBox.currentText())
             output_flag = ["-o", self.outputFileName.text()] if self.outputFileName.text() else []
             algo_flag = ["-a", self.algoComboBox.currentText()] if self.algoComboBox.currentText() else []
-            #subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
-            self.process.start("python", ["mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
+            threshold_flag = ["-t", self.threshold[0], self.threshold[1] ] if self.threshold else []
+    
+            #subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag + threshold_flag)
+            self.process.start("python", ["mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag + threshold_flag)
 
-             # Just to prevent accidentally running multiple times
+            # Just to prevent accidentally running multiple times
             # Disable the button when process starts, and enable it when it finishes
             self.process.started.connect(lambda: self.runButton.setEnabled(False))
             self.process.finished.connect(lambda: self.runButton.setEnabled(True))
@@ -141,15 +157,21 @@ class MainWindow(QMainWindow):
         #QMainWindow.resizeEvent(self, event)
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
-        #Saves window size
+        #Save Window Size when Program Closes
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size').setValue('Window Size', self.saveGeometry())
-        #self.setting_geometry.setValue('Window Size', self.saveGeometry())
+
 
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         #self.w = settingWindow()
         pass
 
+"""
+Uncomment comment block below to add a Settings Window
+
+TODO: Add Thresholds to Settings Window
+
+"""
 '''
 class settingWindow(QDialog):
     def __init__(self):
