@@ -1,7 +1,8 @@
+import os
 import sys
 import subprocess
 from PyQt6 import QtGui, QtWidgets
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QProcess
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
 
 from PyQt6.QtWidgets import (QMenu, QHBoxLayout, QComboBox,QLineEdit, QTextEdit,QApplication, QFileDialog, QGridLayout, QLabel, QMainWindow,
@@ -32,10 +33,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central)
         self.layout = QVBoxLayout(central)
 
+        self.process = QProcess(self)
+        self.process.readyRead.connect(self.terminalOutput)
+
         self.initMenu()
         self.algorithmParameters()
         self.initInputField()
         self.initScriptButton()
+        self.terminalResults = QTextEdit()
+        self.terminalOutput()
+        self.layout.addWidget(self.terminalResults)
         
         self.show()
         
@@ -93,18 +100,36 @@ class MainWindow(QMainWindow):
 
     def initScriptButton(self):
         #Button to run script
-        button = QPushButton("Download and Graph Image/Video")
-        button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        button.clicked.connect(self.runScript)
-        button.setShortcut("Return")
-        self.layout.addWidget(button)
+        self.runButton = QPushButton("Download and Graph Image/Video")
+        self.runButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.runButton.clicked.connect(self.runScript)
+        self.runButton.setShortcut("Return")
+        self.layout.addWidget(self.runButton)
     
+    def terminalOutput(self):
+        self.terminalResults.setPlaceholderText("Terminal Results")
+
+        cursor = self.terminalResults.textCursor()
+        self.terminalResults.setReadOnly(True)
+        #cursor.movePosition(cursor.End)
+        cursor.insertText(self.process.readAll().data().decode())
+        self.terminalResults.ensureCursorVisible()
+        
+
+
     def runScript(self):
         try:
             print(self.algoComboBox.currentText())
             output_flag = ["-o", self.outputFileName.text()] if self.outputFileName.text() else []
             algo_flag = ["-a", self.algoComboBox.currentText()] if self.algoComboBox.currentText() else []
-            subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
+            #subprocess.run(["python", "mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
+            self.process.start("python", ["mediagrapher.py", self.inputField.text()]+ output_flag + algo_flag)
+
+             # Just to prevent accidentally running multiple times
+            # Disable the button when process starts, and enable it when it finishes
+            self.process.started.connect(lambda: self.runButton.setEnabled(False))
+            self.process.finished.connect(lambda: self.runButton.setEnabled(True))
+
         except Exception as e:
             print(f"Error running script: {e}")
 
