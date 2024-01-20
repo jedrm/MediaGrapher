@@ -54,6 +54,12 @@ Run the program using the following command:
 python mediagrapher.py
 ```
 
+Run the Graphical User Interface (GUI) using the following command:
+
+```bash
+python gui.py
+```
+
 Use the `-h` or `--help` flag to get a detailed description of the options:
 
 ```bash
