@@ -25,6 +25,10 @@ class MainWindow(QMainWindow):
         #self.setting_parameters = QSettings('MediaGrapher', 'Parameters')
 
     # TODO Changing cursor icon when resizing window
+    # TODO Add a button to navigate to the output folder/file
+    # TODO Add a button to open the output file
+    # TODO Add a button to reset settings to default if additional settings are added
+    # TODO Utilize a settings window to save user preferences if additional settings are added in the future
     def initUi(self):
         self.setWindowTitle("MediaGrapher")
         #self.resize(500,350) #width, height
@@ -47,8 +51,9 @@ class MainWindow(QMainWindow):
         
         self.show()
         
+    #NOTE: Uncomment code in this function to add a Settings Window in Menu Bar
     def initMenu(self):
-        #Set Parameters Settings Window (Uncomment to Add Settings Window)
+        # NOTE: Uncomment to add a Settings Window to Menu Bar
         # self.w = settingWindow()
         # setParametersAct = QAction('&Set Parameters', self)
         # setParametersAct.setShortcut('Ctrl+P')
@@ -62,10 +67,13 @@ class MainWindow(QMainWindow):
         #Menu Bar
         menuBar = self.menuBar()
         menuMediaGrapher = menuBar.addMenu("Media Grapher")
+
+        # NOTE: Uncomment to add a Settings Window in Menu Bar
         #menuMediaGrapher.addAction(setParametersAct)
+
         menuMediaGrapher.addAction(exitAct)
 
-    #Uncomment to add a Settings Window
+    # NOTE:Uncomment to show a Settings Window
     # def show_settingWindow(self, checked):
     #     #Shows Setting Window
     #     self.w.show()     
@@ -127,7 +135,6 @@ class MainWindow(QMainWindow):
         self.terminalResults.setPlaceholderText("Terminal Results")
         cursor = self.terminalResults.textCursor()
         self.terminalResults.setReadOnly(True)
-        cursor.movePosition(cursor.atEnd)
         cursor.insertText(self.process.readAll().data().decode())
         self.terminalResults.ensureCursorVisible()
         self.layout.addWidget(self.terminalResults)
@@ -160,7 +167,6 @@ class MainWindow(QMainWindow):
         #Save Window Size when Program Closes
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size').setValue('Window Size', self.saveGeometry())
 
-
     def setParameters(self):
         #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
         #self.w = settingWindow()
@@ -170,6 +176,7 @@ class MainWindow(QMainWindow):
 Uncomment comment block below to add a Settings Window
 
 TODO: Add Thresholds to Settings Window
+TODO: Add Default Button to reset Settings to Default
 
 """
 '''
