@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 
+#NOTE: Some imports are for commented out code (Settings Window)
 from PyQt6 import QtGui, QtWidgets
 from PyQt6.QtCore import Qt, QProcess
 from PyQt6.QtGui import QAction, QResizeEvent, QCursor
@@ -88,6 +89,7 @@ class MainWindow(QMainWindow):
         algoLayout.addWidget(self.algoComboBox)
         self.layout.addLayout(algoLayout)
 
+    # TODO: Add background to slider labels to indiciate to user that they can type in the number
     def thresholdsParameter(self):
         thresholdLabel = QLabel("Set Algorithm Thresholds: ")  
         thresholdLayout = QHBoxLayout()
