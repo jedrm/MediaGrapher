@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         
         self.show()
         
-    #NOTE: Uncomment code in this function to add a Settings Window in Menu Bar
+    # NOTE: Uncomment code in this function to add a Settings Window in Menu Bar
     def initMenu(self):
         # NOTE: Uncomment to add a Settings Window to Menu Bar
         # self.w = settingWindow()
@@ -158,8 +158,10 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(f"Error running script: {e}")
 
+    # TODO: Changing cursor icon when resizing window
+    # NOTE: Function not in use, and not working
     def resizeEvent (self, event: QtGui.QResizeEvent) -> None:
-        #Doesn't change cursor yet
+        # Doesn't change cursor yet
         #QApplication.setOverrideCursor(Qt.CursorShape.BusyCursor)
         self.setCursor(Qt.CursorShape.SizeBDiagCursor) #changes cursor, but doesn't work here or when resetting
 
@@ -168,11 +170,6 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         #Save Window Size when Program Closes
         self.setting_geometry = QSettings('MediaGrapher', 'Window Size').setValue('Window Size', self.saveGeometry())
-
-    def setParameters(self):
-        #https://www.pythonguis.com/tutorials/pyqt6-creating-multiple-windows/
-        #self.w = settingWindow()
-        pass
 
 """
 Uncomment comment block below to add a Settings Window
