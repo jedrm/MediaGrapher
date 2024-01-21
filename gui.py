@@ -11,6 +11,9 @@ from PyQt6.QtWidgets import (QMenu, QHBoxLayout, QComboBox,QLineEdit, QTextEdit,
 from PyQt6.QtCore import Qt,QSettings
 from superqt import QLabeledRangeSlider
 
+# TODO: Add choice of number of threads to use when implemented in mediagrapher.py.
+# TODO: Add choice of CPU or GPU when implemented in mediagrapher.py.
+
 # Create the app's main window
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -133,6 +136,7 @@ class MainWindow(QMainWindow):
         self.runButton.setShortcut("Return")
         self.layout.addWidget(self.runButton)
     
+    # TODO: Terminal Output doesn't display progress bar when processing frames as it origianlly did in terminal
     def terminalOutput(self):
         self.terminalResults.setPlaceholderText("Terminal Results")
         cursor = self.terminalResults.textCursor()
