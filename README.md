@@ -12,7 +12,7 @@ Ubuntu
 
 ```bash
 sudo apt update
-sudo apt install git python3-dev python3-pip build-essential libagg-dev libpotrace-dev pkg-config ffmpeg
+sudo apt install git python3-dev python3-pip build-essential libagg-dev libpotrace-dev pkg-config
 ```
 
 CentOS/RedHat
@@ -37,7 +37,6 @@ UNIX
 ```bash
 virtualenv env
 source env/bin/activate
-pip install -r requirements.txt
 ```
 
 Windows
@@ -45,7 +44,6 @@ Windows
 ```bash
 virtualenv --python C:\Path\To\Python\python.exe env
 .\env\Scripts\activate
-pip install -r requirements.txt
 ```
 
 ## Running the Program
@@ -65,7 +63,7 @@ python mediagrapher.py --help
 Output:
 
 ```bash
-usage: MediaGrapher [-h] [-o OUTPUT] [-a {Canny,Sobel}] [-t LOW HIGH] [-p threads] url
+usage: MediaGrapher [-h] [-o OUTPUT] [-a {Canny,Sobel}] [-t LOW HIGH] url
 
 Command-line interface for graphing images and videos.
 
@@ -75,15 +73,13 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -o OUTPUT, --output OUTPUT
-                        Output file name. (default name: output)
+                        Output file name.
   -a {Canny,Sobel}, --algorithm {Canny,Sobel}
-                        Edge detection algorithm. (default algorithm: Canny)
+                        Edge detection algorithm.
   -t LOW HIGH, --thresholds LOW HIGH
                         Thresholds for the Canny edge detection algorithm. (default: 30, 200)
-  -p THREADS, --threads THREADS (range from 1 to MAX_THREADS)
-                        Number of threads utilized on the CPU. (default: MAX_THREADS)
 ```
 
 ## Credits
 
-This project is heavily influenced by the following [GitHub repository](https://github.com/kevinjycui/DesmosBezierRenderer).
+This project is heavily influenced by the following ![GitHub repository](https://github.com/kevinjycui/DesmosBezierRenderer).
