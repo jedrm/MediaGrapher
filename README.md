@@ -77,10 +77,10 @@ options:
   -o OUTPUT, --output OUTPUT
                         Output file name. (default name: output)
   -a {Canny,Sobel}, --algorithm {Canny,Sobel}
-                        Edge detection algorithm. (default algorithm: canny)
+                        Edge detection algorithm. (default algorithm: Canny)
   -t LOW HIGH, --thresholds LOW HIGH
                         Thresholds for the Canny edge detection algorithm. (default: 30, 200)
-  -p THREADS, --threads THREADS
+  -p THREADS, --threads THREADS (range from 1 to MAX_THREADS)
                         Number of threads utilized on the CPU. (default: MAX_THREADS)
 ```
 
