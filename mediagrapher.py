@@ -32,7 +32,6 @@ parser.add_argument('-p', '--threads', type=int, choices=range(1, MAX_THREADS+1)
                     help="Number of threads utilized on the CPU. (default: MAX_THREADS)")
 args = parser.parse_args()
 
-THREADS = args.threads
 URL = args.url
 OUTPUT = args.output
 ALGORITHM = args.algorithm
