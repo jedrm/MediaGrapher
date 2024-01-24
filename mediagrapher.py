@@ -258,7 +258,7 @@ def main():
         print("Done.")
     elif media_type == "video":
         print("Processing video...")
-        process_video(media, os.path.join("input", "frames"), OUTPUT)
+        process_video(media, os.path.join("input", "frames"), OUTPUT, THREADS)
     else:
         print("Error: Could not process media.")
 
