@@ -50,6 +50,12 @@ pip install -r requirements.txt
 
 ## Running the Program
 
+Run the GUI using the following command:
+
+```bash
+python gui.py
+```
+
 Run the program using the following command:
 
 ```bash
