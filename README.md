@@ -48,6 +48,12 @@ virtualenv --python C:\Path\To\Python\python.exe env
 
 ## Running the Program
 
+Run the GUI using the following command:
+
+```bash
+python gui.py
+```
+
 Run the program using the following command:
 
 ```bash
