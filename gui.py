@@ -23,6 +23,7 @@ from superqt import QLabeledRangeSlider
 ALLOWED_ALGORITHMS = ["Canny", "Sobel"]
 MAX_THREADS = os.cpu_count()
 
+
 class MainWindow(QMainWindow):
     """
     The main window of the MediaGrapher application.
@@ -144,7 +145,7 @@ class MainWindow(QMainWindow):
         Returns:
             None
         """
-        self.algo_combo_box = QComboBox()
+        self.algo_combo_box = QComboBox() #QCompleter can be used if there ends up being a lot of algorithms to select from.
         self.algo_combo_box.addItems(ALLOWED_ALGORITHMS)
         algo_label = QLabel("Algorithm: ")
         algo_label.setBuddy(self.algo_combo_box)
@@ -196,9 +197,10 @@ class MainWindow(QMainWindow):
             None
         """
         self.threads_combo_box = QComboBox()
-        self.threads_combo_box.addItems([str(i) for i in range(1, MAX_THREADS+1)])
-        self.threads_combo_box.setCurrentIndex(MAX_THREADS-1)  # Set default choice to MAX_THREADS
-        self.threads_combo_box.view().setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.threads_combo_box.addItems(
+            [str(i) for i in range(1, MAX_THREADS+1)])
+        self.threads_combo_box.setCurrentIndex(
+            MAX_THREADS-1)  # Set default choice to MAX_THREADS
         threads_label = QLabel("Number of CPU Threads: ")
         threads_label.setBuddy(self.threads_combo_box)
         threads_layout = QHBoxLayout()
@@ -272,7 +274,8 @@ class MainWindow(QMainWindow):
                          ] if self.algo_combo_box.currentText() else []
             threshold_flag = ["-t", self.threshold[0],
                               self.threshold[1]] if self.threshold else []
-            threads_flag = ["-p", self.threads_combo_box.currentText()] if self.threads_combo_box.currentText() else []
+            threads_flag = ["-p", self.threads_combo_box.currentText()
+                            ] if self.threads_combo_box.currentText() else []
 
             # subprocess.run(["python", "mediagrapher.py", self.input_field.text()]+ output_flag + algo_flag + threshold_flag + threads_flag)
             self.process.start("python", ["mediagrapher.py", self.input_field.text(
