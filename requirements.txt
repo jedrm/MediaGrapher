@@ -63,7 +63,7 @@ python-dateutil==2.8.2
 PyYAML==6.0.1
 pyzmq==25.1.2
 QtPy==2.4.1
-requests==2.31.0
+requests==2.32.0
 six==1.16.0
 stack-data==0.6.3
 superqt==0.6.1
